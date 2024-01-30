@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 
 /*컨트롤러
@@ -19,15 +20,12 @@ import java.time.LocalDateTime;
 7. DB처리를 원하면 모델에게 위임(DAO:서비스)한 후 View를 응답하면 끝
 * */
 
+@RequiredArgsConstructor
 @Controller
 public class UserController {
 
-    private  UserRepository userRepository; // null
-
-    public UserController(UserRepository userRepository) { //IOC 컨테이너에서 써치해서 찾아서 넣어줌
-        this.userRepository = userRepository;
-    } // 생성자를 만들어서 디폴트 생성자를 없애버림
-
+    private final UserRepository userRepository; // null
+    private final HttpSession session;
 
     //원래는 get요청이나 예외 post요청하면 됨
     @PostMapping("/login")
@@ -37,12 +35,16 @@ public class UserController {
             return "error/400";
         }
 
-        // 2. 모델에 연결하기=위임하기
+        // 2. 모델 필요 select * from user_tb where username=? and password=?
         User user = userRepository.findByUsernameAndPassword(requestDTO); // DB에 조회할때 필요하니까 데이터를 받음
-        System.out.println(user);
 
-// 3. 응답
-        return "redirect:/";
+        if (user == null) {
+            return "error/401";
+        }else {
+            session.setAttribute("sessionUser", user);
+            return "redirect:/";
+        }
+
     }
 
     @PostMapping("/join")
@@ -51,11 +53,11 @@ public class UserController {
 
         // 1. 유효성 검사
         if(requestDTO.getUsername().length() < 3) {
-           return "error/400";
+            return "error/400";
         }
 
         //2. 모델에게 위임하기
-        userRepository.saveV2(requestDTO);
+        userRepository.save(requestDTO);
         return "redirect:/loginForm";
     }
 
