@@ -34,4 +34,13 @@ public class UserRepository {
 
         em.persist(user);
     }
+
+    public User findByUsernameAndPassword(UserRequest.loginDTO requestDTO) {
+            Query query = em.createNativeQuery("SELECT * FROM user_tb WHERE username=? AND password=?", User.class); // 알아서 매핑해줌
+            query.setParameter(1, requestDTO.getUsername());
+            query.setParameter(2, requestDTO.getPassword());
+
+            User user = (User) query.getSingleResult();
+            return user;
+    }
 }

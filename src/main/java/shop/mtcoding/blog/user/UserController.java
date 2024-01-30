@@ -28,6 +28,23 @@ public class UserController {
         this.userRepository = userRepository;
     } // 생성자를 만들어서 디폴트 생성자를 없애버림
 
+
+    //원래는 get요청이나 예외 post요청하면 됨
+    @PostMapping("/login")
+    public String login(UserRequest.loginDTO requestDTO) { // 민감한 정보는 쿼리 스트링에 담아보낼 수 없음
+        // 1. 유효성 검사
+        if(requestDTO.getUsername().length() < 3) {
+            return "error/400";
+        }
+
+        // 2. 모델에 연결하기=위임하기
+        User user = userRepository.findByUsernameAndPassword(requestDTO); // DB에 조회할때 필요하니까 데이터를 받음
+        System.out.println(user);
+
+// 3. 응답
+        return "redirect:/";
+    }
+
     @PostMapping("/join")
     public String join(UserRequest.joinDTO requestDTO){
         System.out.println(requestDTO);
