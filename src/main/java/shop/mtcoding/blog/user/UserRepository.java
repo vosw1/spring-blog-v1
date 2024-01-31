@@ -11,8 +11,21 @@ import javax.persistence.Query;
 public class UserRepository {
     private EntityManager em; // 컴포지션
 
-    public UserRepository(EntityManager em) { // 생성자
-        this.em = em;
+    public boolean UserRepository(String username) { // 생성자
+        Query query = em.createNativeQuery("select * from user_tb where username=?", User.class);
+        query.setParameter(1, username);
+
+        try {
+            User user = (User) query.getSingleResult();
+            return true; // 있음
+        } catch (Exception e) {
+            return false; // 없음
+        }
+
+    }
+
+    public static User findByUsername(String username) {
+
     }
 
     @Transactional
@@ -40,7 +53,11 @@ public class UserRepository {
         query.setParameter(1, requestDTO.getUsername());
         query.setParameter(2, requestDTO.getPassword());
 
-        User user = (User) query.getSingleResult();
-        return user;
+        try {
+            User user = (User) query.getSingleResult();
+            return user;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

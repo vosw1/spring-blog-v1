@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -50,6 +51,7 @@ public class UserController {
 //        return "redirect:/"; //파일명 쓰지말기 또 페이지만들어있는데
     }
 
+    @Transactional
     @PostMapping ("/join")
     public String join(UserRequest.joinDTO requestDTO){
         System.out.println(requestDTO); //@DATA안에 String도 포함되어있음
@@ -58,9 +60,14 @@ public class UserController {
         if(requestDTO.getUsername().length() <3){
             return "error/400";
         }
-        //2. Model에게 위임하기
-        userRepository.save(requestDTO);
-
+        //2. 동일  username 체크 -> 나중에 하나로 묶기
+User user = UserRepository.findByUsername(requestDTO.getUsername());
+        if(user == null) {
+            //3. Model에게 위임하기
+            userRepository.save(requestDTO);
+        } else {
+            return "error/400";
+        }
         return "redirect:/loginForm"; //리다이렉션불러놓은게 있어서 다시부른거
     }
 
@@ -83,4 +90,6 @@ public class UserController {
     public String logout() {
         return "redirect:/";
     }
+
+
 }

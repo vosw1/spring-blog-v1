@@ -2,24 +2,23 @@ package shop.mtcoding.blog.user;
 
 import lombok.Data;
 
-/*
+/**
  * 요청 DTO = Data Transfer Object
- * 통신으로 전송되는 것을 항아리에 담아서 관리하는 것
- * 응답은 다 파일로 할 것이기에 적지 않음
- * */
+ * dto 클라이언트로 받는 데이터
+ */
+public class UserRequest {//유저한테 요청하는 데이터를 할때, 따로 클래스를 분리하면 지저분해보이기 때문에 합쳐서 만듬
 
-public class UserRequest {
-
-    @Data // getter, setter 다 가지고 있음
-    public static class joinDTO { // userController에게 요청되는 회원가입 데이터
-        private  String username;
-        private  String password;
-        private  String email;
+    @Data
+    public static class joinDTO{//요청받는 항아리 , 유저한테 요구하는 조인 데이터
+        private String username;
+        private String password;
+        private String email;
     }
 
-    @Data // getter, setter 다 가지고 있음
-    public static class loginDTO { // userController에게 요청되는 로그인 데이터
-        private  String username;
-        private  String password;
+    @Data
+    public static class loginDTO{//유저한테 요구하는 로그인 데이터
+        private String username;
+        private String password;
     }
+
 }
