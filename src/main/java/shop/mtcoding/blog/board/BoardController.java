@@ -20,7 +20,7 @@ public class BoardController {
     // http://localhost:8080?page=0
     @GetMapping({ "/", "/board"})
     public String index(HttpServletRequest request, @RequestParam(defaultValue = "0") int page) {
-        //System.out.println("페이지: " +page);
+        //System.out.println("페이지: "+page);
         List<Board> boardList = boardRepository.findAll(page);
         request.setAttribute("boardList", boardList); // 가방에 담음
 
