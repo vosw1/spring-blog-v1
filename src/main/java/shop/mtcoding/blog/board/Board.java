@@ -1,9 +1,9 @@
 package shop.mtcoding.blog.board;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data // getter, setter, toString 포함되어 있음
@@ -16,7 +16,7 @@ public class Board {
 
     private String title;
     private String content; // 데이터가 여러건이라 테이블로 쪼개야함
-    private int userId; //카멜을 쓰면 언더스코어로 만들어줌 -> 외래키
+    private int userId; // 작성자 - 카멜을 쓰면 언더스코어로 만들어줌 -> 외래키
 
     @CreationTimestamp
     private LocalDateTime createdAt;
