@@ -32,7 +32,8 @@ public class BoardController {
 
     // 상세보기시 호출
     @GetMapping("/board/{id}") // 1이 프라이머리키 -> 뭐든 넣어도 실행시키려면 변수화시켜서 {}
-    public String detail(@PathVariable int id, HttpServletRequest request) { // 파싱하게 치환해서 알려줌
+    public String detail(@PathVariable int id) {
+        System.out.println("id : "+id);
         return "board/detail";
     }
 }
