@@ -4,3 +4,17 @@ server:
       charset: utf-8
       force: true
   port: 8080
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test;MODE=MySQL
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true # 웹에서 콘솔에 접근할 수 있게 활성화
+
+  jpa:
+    hibernate:
+      ddl-auto: create # 서버 실행 시 테이블 생성
