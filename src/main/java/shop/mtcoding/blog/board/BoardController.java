@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import shop.mtcoding.blog.user.User;
 
 import java.util.List;
@@ -18,6 +17,25 @@ public class BoardController {
 
     private final HttpSession session; // DI
     private final BoardRepository boardRepository; // DI
+
+    @PostMapping("/board/{id}/delete") // bodt데이터가 없어서 유효성 검사 안해도 됨
+    public String delete(@PathVariable int id, HttpServletRequest request) {
+        // 1. 인증 검사하기
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if(sessionUser == null) {
+            return "redirect:/loginForm";
+        }
+        // 2. 권한 검사하기
+        Board board = boardRepository.findById(id);
+        if(board.getUserId() != sessionUser.getId()){
+            request.setAttribute("status", 403);
+            request.setAttribute("msg", "게시글을 삭제할 권한이 없습니다");
+            return "error/40x"; // 리다이렉트 하면 데이터 사라지니까 하면 안됨
+        }
+        boardRepository.deleteById(id);
+
+        return "redirect:/";
+    }
 
     @PostMapping("/board/save")
     public String save(BoardRequest.SaveDTO requestDTO, HttpServletRequest request) {
@@ -71,7 +89,7 @@ public class BoardController {
         System.out.println("id : " + id);
         // 1. 바로 모델 진입 -> 상세보기 데이터 가져오기
         // body 데이터가 없으면 유효성 검사할 필요 없음
-        BoardResponse.DetailDTO reponseDTO = boardRepository.findById(id);
+        BoardResponse.DetailDTO reponseDTO = boardRepository.findByIdWithUser(id); //메서드 이름 변경
 
         // user 객체를 가져와서 session 값 받기 : object라 다운 캐스팅 해야함
         User sessionUser = (User) session.getAttribute("sessionUser");
