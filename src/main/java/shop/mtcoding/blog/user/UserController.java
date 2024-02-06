@@ -71,6 +71,8 @@ public class UserController {
 
     @GetMapping("/logout")
     public String logout() {
+        // 1번 서랍에 있는 uset를 삭제해야 로그아웃이 됨
+        session.invalidate(); // 서랍의 내용 삭제
         return "redirect:/";
     }
 }
