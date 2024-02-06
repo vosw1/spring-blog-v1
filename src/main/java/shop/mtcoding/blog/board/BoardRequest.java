@@ -5,7 +5,7 @@ import lombok.Data;
 public class BoardRequest {
 
     @Data
-    public static class SaveDto {
+    public static class SaveDTO {
         private String title;
         private String content;
     }

@@ -12,6 +12,8 @@ public class Board { // User 1 -> Board N
     @Id // PK 설정
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment 전략
     private int id;
+
+    @Column(length = 30) // 제약 조건 걸기
     private String title;
     private String content;
 

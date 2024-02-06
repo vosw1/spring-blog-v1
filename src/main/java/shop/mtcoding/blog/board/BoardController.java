@@ -19,10 +19,29 @@ public class BoardController {
     private final HttpSession session; // DI
     private final BoardRepository boardRepository; // DI
 
-    @PostMapping("board/save") //save 주소 만들기
-    public String save(BoardRequest.SaveDto requestDTO) { // 정보 담아오기
-        System.out.println(requestDTO); // 정보 받아왔는지 확인하기
-        return "redirect:/index"; // 인덱스 페이지로 리다이렉션시키기
+    @PostMapping("/board/save")
+    public String save(BoardRequest.SaveDTO requestDTO, HttpServletRequest request) {
+        // 1. 인증 체크
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        System.out.println("sessionUser" + sessionUser);
+        if (sessionUser == null) {
+            return "redirect:/loginForm";
+        }
+
+        // 2. 바디 데이터 확인 및 유효성 검사
+        System.out.println(requestDTO);
+
+        if (requestDTO.getTitle().length() > 30) {
+            request.setAttribute("status", 400);
+            request.setAttribute("msg", "title의 길이가 30자를 초과해서는 안되요");
+            return "error/40x"; // BadRequest
+        }
+
+        // 3. 모델 위임
+        // insert into board_tb(title, content, user_id, created_at) values(?,?,?, now());
+        boardRepository.save(requestDTO, sessionUser.getId());
+
+        return "redirect:/";
     }
 
     // http://localhost:8080?page=0
@@ -37,6 +56,7 @@ public class BoardController {
     public String saveForm() { // session 영역에 접근하기 위한
         // 1. session 영역에 sessionUser 키 값에 user 객체가 있는지 체크하기
         User sessionUser = (User) session.getAttribute("sessionUser");
+
         // 2. 값이 null이면 로그인 페이지로 리다이렉션
         if (sessionUser == null) {
             return "redirect:/loginForm";
