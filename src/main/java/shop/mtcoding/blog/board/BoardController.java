@@ -23,7 +23,7 @@ public class BoardController {
     public String save(BoardRequest.SaveDTO requestDTO, HttpServletRequest request) {
         // 1. 인증 체크
         User sessionUser = (User) session.getAttribute("sessionUser");
-        System.out.println("sessionUser" + sessionUser);
+        System.out.println("sessionUser:" + sessionUser);
         if (sessionUser == null) {
             return "redirect:/loginForm";
         }
@@ -67,8 +67,27 @@ public class BoardController {
 
     // 상세보기시 호출
     @GetMapping("/board/{id}") // 1이 프라이머리키 -> 뭐든 넣어도 실행시키려면 변수화시켜서 {}
-    public String detail(@PathVariable int id) {
+    public String detail(@PathVariable int id, HttpServletRequest request) {
         System.out.println("id : " + id);
+        // 1. 바로 모델 진입 -> 상세보기 데이터 가져오기
+        // body 데이터가 없으면 유효성 검사할 필요 없음
+        BoardResponse.DetailDTO reponseDTO = boardRepository.findById(id);
+
+        // user 객체를 가져와서 session 값 받기 : object라 다운 캐스팅 해야함
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        //System.out.println("sessionUser: " + sessionUser);
+
+        // 2. 페이지 주인 여부 체크(board의 userId와 sessionId의 값 비교)
+        boolean pageOwner = false;
+
+        if (reponseDTO.getUserId() == sessionUser.getId()) {
+            //System.out.println("getUserId:" + reponseDTO.getUserId());
+            pageOwner = true;
+        }
+
+        request.setAttribute("board", reponseDTO);
+        request.setAttribute("pageOwner", pageOwner); // 이 값을 mustache에게 줘야함!
+
         return "board/detail";
     }
 }
