@@ -11,6 +11,7 @@ import shop.mtcoding.blog.user.User;
 @RequiredArgsConstructor
 @Controller
 public class ReplyController {
+
     private final HttpSession session; // DI
     private final ReplyRepository replyRepository; // DI
 
@@ -32,10 +33,9 @@ public class ReplyController {
             return "error/40x"; // BadRequest
         }
         // 3. 모델 위임
-        //insert into reply_tb (content, user_id, created_at) values (?, ?, NOW());
+        // insert into reply_tb (content, user_id, board_id,  created_at) values (?, ?, ? NOW());
         replyRepository.replySave(requestDTO, sessionUser.getId());
-
-        return "redirect:/";
+        return "redirect:/board/{{boardId}}";
     }
 }
 

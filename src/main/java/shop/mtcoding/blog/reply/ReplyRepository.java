@@ -13,9 +13,11 @@ public class ReplyRepository {
 
     @Transactional
     public void replySave(ReplydRequest.ReplySaveDTO requestDTO, int id) {
-        Query query = em.createNativeQuery("insert into reply_tb (content, user_id, created_at) values (?, ?, NOW())");
+        Query query = em.createNativeQuery("insert into reply_tb (content, user_id, board_id,  created_at) values (?, ?, ? NOW())", Reply.class);
         query.setParameter(1, requestDTO.getContent());
         query.setParameter(2, id);
+        query.setParameter(3, requestDTO.getBoardId());
+        System.out.println(requestDTO.getBoardId());
 
         query.executeUpdate();
     }

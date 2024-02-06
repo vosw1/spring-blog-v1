@@ -17,6 +17,7 @@ public class Reply {
     private String content;
 
     private int userId; // 테이블에 만들어 질때 user_id
+    private int boardId;
 
     private LocalDateTime createdAt;
 }

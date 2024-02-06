@@ -9,5 +9,6 @@ public class ReplydRequest {
     public static class ReplySaveDTO {
         @Column(length = 100) // 제약 조건 걸기
         private String content;
+        private int boardId;
     }
 }
