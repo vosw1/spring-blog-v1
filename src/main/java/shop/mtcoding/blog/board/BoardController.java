@@ -20,8 +20,8 @@ public class BoardController {
     private final BoardRepository boardRepository; // DI
 
     @PostMapping("board/save") //save 주소 만들기
-    public String save() {
-
+    public String save(BoardRequest.SaveDto requestDTO) { // 정보 담아오기
+        System.out.println(requestDTO); // 정보 받아왔는지 확인하기
         return "redirect:/index"; // 인덱스 페이지로 리다이렉션시키기
     }
 
