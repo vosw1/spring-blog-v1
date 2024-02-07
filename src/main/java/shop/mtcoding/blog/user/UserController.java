@@ -1,10 +1,16 @@
 package shop.mtcoding.blog.user;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import shop.mtcoding.blog.board.Board;
+import shop.mtcoding.blog.board.BoardRequest;
 
 @AllArgsConstructor
 @Controller
@@ -28,7 +34,7 @@ public class UserController {
     public String login(UserRequest.LoginDTO requestDTO) {
 
         // 1. 유효성 검사
-        if(requestDTO.getUsername().length() < 3) {
+        if (requestDTO.getUsername().length() < 3) {
             return "error/400";
         }
 
@@ -36,7 +42,7 @@ public class UserController {
         User user = userRepository.findByUsernameAndPassword(requestDTO); // DB에 조회할때 필요하니까 데이터를 받음
         if (user == null) {
             return "error/401";
-        }else {
+        } else {
             session.setAttribute("sessionUser", user);
             return "redirect:/";
         }
@@ -66,7 +72,27 @@ public class UserController {
 
     @GetMapping("/user/updateForm")
     public String updateForm() {
-        return "user/updateForm";
+        // 인증 체크하기
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null) {
+            return "redirect:/loginForm";
+        }
+        return "/user/updateForm";
+    }
+
+    @PostMapping("/user/update")
+    public String updateUser(UserRequest.UpdateDTO requestDTO, HttpServletRequest request) {
+        // 세션에서 사용자 정보 가져오기
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null) {
+            return "redirect:/loginForm"; // 로그인 페이지로 리다이렉트
+        }
+
+        // 비밀번호 업데이트
+        userRepository.userUpdate(requestDTO, sessionUser.getId());
+
+        session.setAttribute("sessionUser", sessionUser);
+        return "redirect:/"; // 홈 페이지로 리다이렉트
     }
 
     @GetMapping("/logout")

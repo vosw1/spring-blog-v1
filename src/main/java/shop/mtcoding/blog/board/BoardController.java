@@ -20,7 +20,7 @@ public class BoardController {
     // title=제목1&content=내용1
     // 쿼리 스트링과 -x-www-form-urlencoded와 파싱 방법이 동일함
     @PostMapping("/board/{id}/update")
-    public String update(@PathVariable int id, BoardRequest.UpdateDTO requestDTO) { // 파싱 전략이 json으로 바뀜
+    public String update(@PathVariable int id, BoardRequest.UpdateDTO requestDTO) {
         // System.out.println(requestDTO); 정보 받기 확인
 
         // 인증 체크하기

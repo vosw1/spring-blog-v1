@@ -2,8 +2,11 @@ package shop.mtcoding.blog.user;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import shop.mtcoding.blog.board.Board;
+import shop.mtcoding.blog.board.BoardRequest;
 
 @Repository // IoC에 new하는 방법
 public class UserRepository {
@@ -26,8 +29,9 @@ public class UserRepository {
         query.setParameter(3, requestDTO.getEmail());
         query.executeUpdate();
     }
+
     public User findByUsernameAndPassword(UserRequest.LoginDTO requestDTO) {
-        Query query = em.createNativeQuery("SELECT * FROM user_tb WHERE username=? AND password=?", User.class); // 알아서 매핑해줌
+        Query query = em.createNativeQuery("select * from user_tb where username=? and password=?", User.class); // 알아서 매핑해줌
         query.setParameter(1, requestDTO.getUsername());
         query.setParameter(2, requestDTO.getPassword());
 
@@ -37,5 +41,26 @@ public class UserRepository {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public User findByIdAndEmail(int id) {
+        try {
+            Query query = em.createNativeQuery("select username, email from user_tb where id=?");
+            query.setParameter(1, id);
+
+            User user = (User) query.getSingleResult();
+            return user;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Transactional
+    public void userUpdate(UserRequest.UpdateDTO requestDTO, int id){
+        Query query = em.createNativeQuery("update user_tb set password=? where id = ?");
+        query.setParameter(1,requestDTO.getPassword() );
+        query.setParameter(2, id);
+        query.executeUpdate();
+        System.out.println("query:" + query);
     }
 }
