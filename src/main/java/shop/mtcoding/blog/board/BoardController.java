@@ -18,7 +18,30 @@ public class BoardController {
     private final HttpSession session; // DI
     private final BoardRepository boardRepository; // DI
 
-    @PostMapping("/board/{id}/delete") // bodt데이터가 없어서 유효성 검사 안해도 됨
+    @GetMapping("/board/{id}/updateForm") // 보드에 해당 페이지
+    public String updateFormn(@PathVariable int id, HttpServletRequest request) {
+
+        // 인증 체크하기
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if(sessionUser == null) {
+            return "redirect:/loginForm";
+        }
+
+        // 권한 체크하기
+        Board board = boardRepository.findById(id);
+        if(board.getUserId() != sessionUser.getId()){
+            request.setAttribute("status", 403);
+            request.setAttribute("msg", "게시글을 수정할 권한이 없습니다");
+            return "error/40x"; // 리다이렉트 하면 데이터 사라지니까 하면 안됨
+        }
+
+        // 가방에 담기
+        request.setAttribute("board", board);
+
+        return "board/updateForm";
+    }
+
+    @PostMapping("/board/{id}/delete") // body데이터가 없어서 유효성 검사 안해도 됨
     public String delete(@PathVariable int id, HttpServletRequest request) {
         // 1. 인증 검사하기
         User sessionUser = (User) session.getAttribute("sessionUser");
