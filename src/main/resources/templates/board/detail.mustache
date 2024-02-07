@@ -41,22 +41,26 @@
             <b>댓글리스트</b>
         </div>
         <div class="list-group">
-
-
             <!-- 댓글아이템 -->
-        <div class="list-group-item d-flex justify-content-between align-items-center">
-            {{#reply}}
+            <div class="list-group-item d-flex justify-content-between align-items-center">
                 <div class="d-flex">
-                    <div class="px-1 me-1 bg-primary text-white rounded">{{reply.username}}</div>
-                    <div>{{reply.content}}</div>
+                    <div class="px-1 me-1 bg-primary text-white rounded">cos</div>
+                    <div>댓글 내용입니다</div>
                 </div>
-                <form action="/reply/{{id}}/delete" method="post">
+                <form action="/reply/1/delete" method="post">
                     <button class="btn">🗑</button>
                 </form>
             </div>
-            {{/reply}}
-
-
+            <!-- 댓글아이템 -->
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="d-flex">
+                    <div class="px-1 me-1 bg-primary text-white rounded">ssar</div>
+                    <div>댓글 내용입니다</div>
+                </div>
+                <form action="/reply/1/delete" method="post">
+                    <button class="btn">🗑</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
