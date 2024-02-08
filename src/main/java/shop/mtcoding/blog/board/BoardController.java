@@ -2,10 +2,8 @@ package shop.mtcoding.blog.board;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -13,6 +11,7 @@ import java.util.List;
 public class BoardController {
 
     private final BoardRepository boardRepository;
+
 
     public BoardController(BoardRepository boardRepository) {
         this.boardRepository = boardRepository;
@@ -34,8 +33,10 @@ public class BoardController {
     }
 
     @GetMapping("/board/{id}/updateForm") // 글 수정 화면
-    public String updateForm(@PathVariable int id) {
-
+    public String updateForm(@PathVariable int id, HttpServletRequest request) {
+        // 해당하는 ID의 게시물을 가져와서 요청에 속성으로 추가
+        Board board = boardRepository.findById(id);
+        request.setAttribute("board", board);
         return "board/updateForm";
     }
 
@@ -58,7 +59,11 @@ public class BoardController {
     }
 
     @PostMapping("/board/{id}/update") // 수정하기
-    public String update(@PathVariable int id){
+    public String update(@PathVariable int id, BoardRequest.UpdateDTO requestDTO) {
+
+        // 업데이트 메서드 실행
+        boardRepository.updateById(requestDTO, id);
+
         return "redirect:/";
     }
 
