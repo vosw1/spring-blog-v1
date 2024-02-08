@@ -17,6 +17,5 @@ public class Board {
     @Column(length = 20) // 20자 제한
     private String content;
 
-    @Column(nullable = false) // 빈칸 불가능
     private String author;
 }

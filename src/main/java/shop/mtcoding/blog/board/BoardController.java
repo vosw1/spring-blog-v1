@@ -43,7 +43,7 @@ public class BoardController {
     public String save(BoardRequest.SaveDTO requestDTO, HttpServletRequest request){
         // 익명이라 인증 필요 없음
         // 1. 유효성 검사하기
-        if (requestDTO.getTitle().length() > 20 || requestDTO.getContent().length() > 20) {
+        if (requestDTO.getTitle().length() > 20 && requestDTO.getContent().length() > 20) {
             request.setAttribute("status", 400);
             request.setAttribute("msg", "title 또는 content의 길이가 20자를 초과해서는 안됩니다.");
             return "error/400"; // 400 Bad Request 오류 페이지로 이동
@@ -64,6 +64,9 @@ public class BoardController {
 
     @PostMapping("/board/{id}/delete") // 삭제하기
     public String delete(@PathVariable int id){
+        // 해당하는 id의 게시물을 삭제
+        boardRepository.deleteById(id);
+
         return "redirect:/";
     }
 }
