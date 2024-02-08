@@ -15,3 +15,5 @@ insert into board_tb(title, content, author) values('제목12', '내용12', '임
 insert into board_tb(title, content, author) values('제목13', '내용13', '임꺽정');
 insert into board_tb(title, content, author) values('제목14', '내용14', '임꺽정');
 insert into board_tb(title, content, author) values('제목15', '내용15', '임꺽정');
+
+insert into board_tb(title, content, author) values('제목16', '내용16', 'ssar');

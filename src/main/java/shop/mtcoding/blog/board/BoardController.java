@@ -43,6 +43,19 @@ public class BoardController {
         boolean last = currentPage == totalPageCount - 1;
         request.setAttribute("last", last);
 
+
+        int startPage = 1;
+        int endPage = totalPageCount;
+        List<Integer> pageNumbers = new ArrayList<>();
+
+        // 시작 페이지부터 끝 페이지까지 페이지 번호를 추가
+        for (int i = startPage; i <= endPage; i++) {
+            pageNumbers.add(i); // 페이지 번호는 1부터 시작하므로 인덱스에 1을 더합니다.
+        }
+
+        System.out.println(pageNumbers);
+        request.setAttribute("pageNumbers", pageNumbers);
+
         return "index";
     }
 
