@@ -19,32 +19,32 @@ public class BoardController {
 
     @GetMapping({ "/", "/board"})
     public String index(HttpServletRequest request, @RequestParam(defaultValue = "0") int page) {
+        // 게시글 목록 조회
         List<Board> boardList = boardRepository.findPage(page);
         request.setAttribute("boardList", boardList); // 가방에 담음
 
+        // 현재 페이지
         int currentPage = page;
-        int nextPage = currentPage+1;
-        int prevPage = currentPage-1;
 
+        // 이전 페이지, 다음 페이지
+        int nextPage = currentPage + 1;
+        int prevPage = currentPage - 1;
         request.setAttribute("nextPage", nextPage);
         request.setAttribute("prevPage", prevPage);
-        // 이것만 담으면 디세이브를 못한다.
 
-        // 현재 페이지가 퍼스트인지 라스트인지 만든다.
-        boolean first = currentPage == 0 ? true : false;
-
-        int boardTotalCount = boardRepository.findBoardTotalCount();
-        System.out.println(boardTotalCount);
-        int pagingCount = 5;
-        int totalPageCount = (boardTotalCount/pagingCount)-1;
-        boolean last = currentPage == totalPageCount? true : false;
-
+        // 현재 페이지가 첫 페이지인지 확인하여 PRE 버튼 비활성화
+        boolean first = currentPage == 0;
         request.setAttribute("first", first);
+
+        // 전체 페이지 수 및 마지막 페이지 여부 확인하여 NEXT 버튼 비활성화
+        int boardTotalCount = boardRepository.findBoardTotalCount();
+        int pagingCount = 5; // 페이지당 게시글 수
+        int totalPageCount = (boardTotalCount + pagingCount - 1) / pagingCount; // 올림 처리
+        boolean last = currentPage == totalPageCount - 1;
         request.setAttribute("last", last);
 
         return "index";
     }
-
 
     @GetMapping("/board/saveForm") // 글쓰기 화면
     public String saveForm() {
