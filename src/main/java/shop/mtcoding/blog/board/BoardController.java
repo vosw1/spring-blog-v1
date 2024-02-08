@@ -81,7 +81,7 @@ public class BoardController {
         if (requestDTO.getTitle().length() > 20 && requestDTO.getContent().length() > 20) {
             request.setAttribute("status", 400);
             request.setAttribute("msg", "title 또는 content의 길이가 20자를 초과해서는 안됩니다.");
-            return "error/400"; // 400 Bad Request 오류 페이지로 이동
+            return "error/40x"; // 400 Bad Request 오류 페이지로 이동
         }
 
         // 2. 모델 위임
