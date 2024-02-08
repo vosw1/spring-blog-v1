@@ -20,10 +20,10 @@ spring: # 톰캣을 통과해서 스프링으로 옴
   h2:
     console:
       enabled: true
-#  sql: # 아무것도 안적혀있어서 오류가 나니까 주석처리 되어 있음
-#    init:
-#      data-locations:
-#        - classpath:db/data.sql
+  sql: # 아무것도 안적혀있어서 오류가 나니까 주석처리 되어 있음
+    init:
+      data-locations:
+        - classpath:db/data.sql
   jpa:
     hibernate:
       ddl-auto: create
