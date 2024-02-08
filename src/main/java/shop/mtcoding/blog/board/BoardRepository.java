@@ -6,6 +6,7 @@ import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import shop.mtcoding.blog._core.Constant;
 
 import java.util.List;
 
@@ -13,6 +14,20 @@ import java.util.List;
 @Repository
 public class BoardRepository {
     private final EntityManager em; // IoC 컨테이너에 주입되어야 합니다.
+
+    public List<Board> findPage(int page) {
+        int value = page * Constant.PAGING_COUNT;
+        Query query = em.createNativeQuery("SELECT * FROM board_tb ORDER BY id DESC LIMIT ?, ?", Board.class);
+        query.setParameter(1, value);
+        query.setParameter(2, Constant.PAGING_COUNT);
+        return query.getResultList();
+    }
+
+    public int findBoardTotalCount() {
+        Query query = em.createNativeQuery("SELECT count(*) FROM board_tb");
+        Long boardTotalCount = (Long) query.getSingleResult();
+        return boardTotalCount.intValue();
+    }
 
     public List<Board> findAll() {
         Query query = em.createNativeQuery("select * from board_tb order by id desc", Board.class);
