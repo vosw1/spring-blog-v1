@@ -1,13 +1,13 @@
 server:
   servlet:
     encoding:
-      charset: utf-8
+      charset: utf-8 # 톰캣이 br,bw 할때 3Byte로 끊어 읽는 다는 것
       force: true
     session:
-      timeout: 30m
-  port: 8080
+      timeout: 30m # 톰캣이 세션을 만드니까 톰캣이 세팅함(request도 마찬가지)
+  port: 8080 # 스프링 들어오기전 톰캣의 포트
 
-spring:
+spring: # 톰캣을 통과해서 스프링으로 옴
   mustache:
     servlet:
       expose-session-attributes: true
@@ -20,7 +20,7 @@ spring:
   h2:
     console:
       enabled: true
-#  sql:
+#  sql: # 아무것도 안적혀있어서 오류가 나니까 주석처리 되어 있음
 #    init:
 #      data-locations:
 #        - classpath:db/data.sql
