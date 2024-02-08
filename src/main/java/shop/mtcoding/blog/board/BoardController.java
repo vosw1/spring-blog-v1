@@ -25,32 +25,32 @@ public class BoardController {
 
         // 현재 페이지
         int currentPage = page;
-
-        // 이전 페이지, 다음 페이지
-        int nextPage = currentPage + 1;
-        int prevPage = currentPage - 1;
+        int nextPage = currentPage+1;
+        int prevPage = currentPage-1;
         request.setAttribute("nextPage", nextPage);
         request.setAttribute("prevPage", prevPage);
+        // 이것만 담으면 디세이브를 못한다.
 
-        // 현재 페이지가 첫 페이지인지 확인하여 PRE 버튼 비활성화
-        boolean first = currentPage == 0;
-        request.setAttribute("first", first);
+        // 현재 페이지가 퍼스트인지 라스트인지 만든다.
+        boolean first = currentPage == 0 ? true : false;
 
-        // 전체 페이지 수 및 마지막 페이지 여부 확인하여 NEXT 버튼 비활성화
         int boardTotalCount = boardRepository.findBoardTotalCount();
-        int pagingCount = 5; // 페이지당 게시글 수
-        int totalPageCount = (boardTotalCount + pagingCount - 1) / pagingCount; // 올림 처리
-        boolean last = currentPage == totalPageCount - 1;
+        System.out.println(boardTotalCount);
+        int pagingCount = 3;
+        int totalPageCount = boardTotalCount/pagingCount;
+
+        boolean last = currentPage == totalPageCount-2? true : false;
+
+        request.setAttribute("first", first);
         request.setAttribute("last", last);
 
 
-        int startPage = 1;
-        int endPage = totalPageCount;
+        int endPage = totalPageCount-2;
         List<Integer> pageNumbers = new ArrayList<>();
 
         // 시작 페이지부터 끝 페이지까지 페이지 번호를 추가
-        for (int i = startPage; i <= endPage; i++) {
-            pageNumbers.add(i); // 페이지 번호는 1부터 시작하므로 인덱스에 1을 더합니다.
+        for (int i = 0; i <= endPage; i++) {
+            pageNumbers.add(i);
         }
 
         System.out.println(pageNumbers);
