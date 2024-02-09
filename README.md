@@ -2,8 +2,8 @@
 
 ## 기술스택
 
-- Springboot 2.7
-- JDK 11
+- Springboot 2.7 -> 3.2
+- JDK 11 -> 21
 - VSCODE
 - MySQL8.0
 
