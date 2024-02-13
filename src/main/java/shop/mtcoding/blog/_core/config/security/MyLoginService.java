@@ -27,9 +27,11 @@ public class MyLoginService implements UserDetailsService {
         System.out.println("loadUserByUsername: " + username);
         User user = userRepository.findByUsername(username);
         if (user == null) {
+            System.out.println("user는 null");
             return null; // 로그인 진행하던걸 취소하고 알아서 응답해줌 -> 반환할 페이지를 알려줘야함
         } else {
-            return new MyLoginUser(user);
+            System.out.println("user를 찾았어요");
+            return new MyLoginUser(user); // securityContextHolder에 저장됨
         }
     }
 }

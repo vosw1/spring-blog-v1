@@ -4,10 +4,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration// 메모리에 띄우기 위한 문법
 public class SecurityConfig {
+
+    @Bean
+    public BCryptPasswordEncoder encoder(){
+        return new BCryptPasswordEncoder();
+    } // 패스워드 인코더 디폴트 설정
 
     // 인증과 상관없이 열어야 하는 주소
     // 주소 설계를 잘해야 함
@@ -31,7 +37,7 @@ public class SecurityConfig {
         http.formLogin(f -> {
             // 시큐리티가 들고있는 페이지를 사용할 것
             f.loginPage("/loginForm").loginProcessingUrl("/login").defaultSuccessUrl("/")
-                    .failureForwardUrl("/loginForm"); // 실패하면 이동
+                    .failureUrl("/loginForm"); // 실패하면 이동
         });
 
         return http.build(); // 코드의 변경이 없으면 부모 이름(추상적)으로 리턴할 필요 없음
