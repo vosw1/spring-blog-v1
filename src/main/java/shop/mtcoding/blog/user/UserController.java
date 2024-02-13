@@ -35,23 +35,23 @@ public class UserController {
     // 민감한 정보는 쿼리 스트링에 담아보낼 수 없음
     //원래는 get요청이나 예외 post요청하면 됨
     //민감한 정보는 쿼리 스트링에 담아보낼 수 없음
-    @PostMapping("/login")
-    public String login(UserRequest.LoginDTO requestDTO) {
-
-        // 1. 유효성 검사
-        if (requestDTO.getUsername().length() < 3) {
-            return "error/400";
-        }
-
-        // 2. 모델 필요 select * from user_tb where username=? and password=?
-        User user = userRepository.findByUsernameAndPassword(requestDTO); // DB에 조회할때 필요하니까 데이터를 받음
-        if (user == null) {
-            return "error/401";
-        } else {
-            session.setAttribute("sessionUser", user);
-            return "redirect:/";
-        }
-    }
+//    @PostMapping("/login")
+//    public String login(UserRequest.LoginDTO requestDTO) {
+//
+//        // 1. 유효성 검사
+//        if (requestDTO.getUsername().length() < 3) {
+//            return "error/400";
+//        }
+//
+//        // 2. 모델 필요 select * from user_tb where username=? and password=?
+//        User user = userRepository.findByUsernameAndPassword(requestDTO); // DB에 조회할때 필요하니까 데이터를 받음
+//        if (user == null) {
+//            return "error/401";
+//        } else {
+//            session.setAttribute("sessionUser", user);
+//            return "redirect:/";
+//        }
+//    }
 
     @GetMapping("/joinForm") // view만 원함
     public String joinForm() {
