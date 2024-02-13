@@ -3,12 +3,14 @@ package shop.mtcoding.blog.user;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import shop.mtcoding.blog._core.config.security.MyLoginUser;
 import shop.mtcoding.blog.board.Board;
 import shop.mtcoding.blog.board.BoardRequest;
 
@@ -20,38 +22,10 @@ public class UserController {
     private final UserRepository userRepository; // null
     private final HttpSession session;
 
-    // @AllArgsConstructor를 사용하면서 필요 없어짐
-//    public UserController(UserRepository userRepository, HttpSession session) {
-//        this.userRepository = userRepository;
-//        this.session = session;
-//    }
-
     @GetMapping("/loginForm") // view만 원함
     public String loginForm() {
         return "user/loginForm";
     }
-
-    // 원래는 get요청이나 예외 post요청하면 됨
-    // 민감한 정보는 쿼리 스트링에 담아보낼 수 없음
-    //원래는 get요청이나 예외 post요청하면 됨
-    //민감한 정보는 쿼리 스트링에 담아보낼 수 없음
-//    @PostMapping("/login")
-//    public String login(UserRequest.LoginDTO requestDTO) {
-//
-//        // 1. 유효성 검사
-//        if (requestDTO.getUsername().length() < 3) {
-//            return "error/400";
-//        }
-//
-//        // 2. 모델 필요 select * from user_tb where username=? and password=?
-//        User user = userRepository.findByUsernameAndPassword(requestDTO); // DB에 조회할때 필요하니까 데이터를 받음
-//        if (user == null) {
-//            return "error/401";
-//        } else {
-//            session.setAttribute("sessionUser", user);
-//            return "redirect:/";
-//        }
-//    }
 
     @GetMapping("/joinForm") // view만 원함
     public String joinForm() {
@@ -71,13 +45,10 @@ public class UserController {
     }
 
     @GetMapping("/user/updateForm")
-    public String updateForm() {
-//        // 인증 체크하기
-//        User sessionUser = (User) session.getAttribute("sessionUser");
-//        if (sessionUser == null) {
-//            return "redirect:/loginForm";
-//        }
-        return "/user/updateForm";
+    public String updateForm(HttpServletRequest request, @AuthenticationPrincipal MyLoginUser myLoginUser) {
+        User user = userRepository.findByUsername(myLoginUser.getUsername());
+        request.setAttribute("user", user);
+        return "user/updateForm";
     }
 
     @PostMapping("/user/update")

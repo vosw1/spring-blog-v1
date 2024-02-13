@@ -1,5 +1,6 @@
 package shop.mtcoding.blog._core.config.security;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,16 +8,12 @@ import shop.mtcoding.blog.user.User;
 
 import java.util.Collection;
 
+// 세션에 저장되는 오브젝트
+@Getter
 @RequiredArgsConstructor
-// session에 저장되는 오브젝트 -> 테이블에서 implement받지 않음 (복잡)
 public class MyLoginUser implements UserDetails {
-
     private final User user; // 컴포지션 - 결합
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
 
     @Override
     public String getPassword() {
@@ -46,5 +43,11 @@ public class MyLoginUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    // 권한! 나중에 하자.
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
     }
 }

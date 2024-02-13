@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
 @Configuration// 메모리에 띄우기 위한 문법
 public class SecurityConfig {
@@ -18,8 +19,8 @@ public class SecurityConfig {
     // 인증과 상관없이 열어야 하는 주소
     // 주소 설계를 잘해야 함
     @Bean
-    public WebSecurityCustomizer ignore(){
-        return w -> w.ignoring().requestMatchers("/board/*", "/static/**", "/h2-console/**");
+    public WebSecurityCustomizer ignore(){ // 정적 파일만 security filter에서 제외시키기
+        return w -> w.ignoring().requestMatchers("/static/**", "/h2-console/**");
     }
 
     @Bean
@@ -29,7 +30,8 @@ public class SecurityConfig {
 
         // 주소로 필터링 : 인증이 필요한 페이지를 주소로 구분
         http.authorizeHttpRequests(a -> {
-            a.requestMatchers("/user/updateForm", "/board/**").authenticated() // 인증이 필요한 페이지
+            a.requestMatchers(RegexRequestMatcher.regexMatcher("/board/\\d+")).permitAll()
+                    .requestMatchers("/user/**", "/board/**").authenticated() // 인증이 필요한 페이지
                     .anyRequest().permitAll(); // 인증이 필요없는 페이지
         });
 
