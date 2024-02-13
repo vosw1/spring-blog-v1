@@ -21,7 +21,7 @@ public class BoardController {
     // 쿼리 스트링과 -x-www-form-urlencoded와 파싱 방법이 동일함
 
     // http://localhost:8080?page=0
-    @GetMapping({"/", "/board"})
+    @GetMapping({"/"})
     public String index(HttpServletRequest request) {
         List<Board> boardList = boardRepository.findAll();
         request.setAttribute("boardList", boardList);
@@ -60,9 +60,9 @@ public class BoardController {
         User sessionUser = (User) session.getAttribute("sessionUser");
 
         // 2. 값이 null이면 로그인 페이지로 리다이렉션
-        if (sessionUser == null) {
-            return "redirect:/loginForm";
-        }
+//        if (sessionUser == null) {
+//            return "redirect:/loginForm";
+//        }
         // 3. null이 아니면 /board/saveForm으로 이동
         return "board/saveForm";
     }
@@ -71,10 +71,10 @@ public class BoardController {
     public String save(BoardRequest.SaveDTO requestDTO, HttpServletRequest request) {
         // 1. 인증 체크
         User sessionUser = (User) session.getAttribute("sessionUser");
-        System.out.println("sessionUser:" + sessionUser);
-        if (sessionUser == null) {
-            return "redirect:/loginForm";
-        }
+//        System.out.println("sessionUser:" + sessionUser);
+//        if (sessionUser == null) {
+//            return "redirect:/loginForm";
+//        }
 
         // 2. 바디 데이터 확인 및 유효성 검사
         System.out.println(requestDTO);
@@ -97,9 +97,9 @@ public class BoardController {
 
         // 인증 체크하기
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            return "redirect:/loginForm";
-        }
+//        if (sessionUser == null) {
+//            return "redirect:/loginForm";
+//        }
 
         // 권한 체크하기
         Board board = boardRepository.findById(id);
@@ -120,9 +120,9 @@ public class BoardController {
 
         // 인증 체크하기
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            return "redirect:/loginForm";
-        }
+//        if (sessionUser == null) {
+//            return "redirect:/loginForm";
+//        }
 
         // 권한 체크하기
         Board board = boardRepository.findById(id);
@@ -139,9 +139,9 @@ public class BoardController {
     public String delete(@PathVariable int id) {
         // 1. 인증 검사하기
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            return "redirect:/loginForm";
-        }
+//        if (sessionUser == null) {
+//            return "redirect:/loginForm";
+//        }
         // 2. 권한 검사하기
         Board board = boardRepository.findById(id);
         if (board.getUserId() != sessionUser.getId()) {

@@ -72,11 +72,11 @@ public class UserController {
 
     @GetMapping("/user/updateForm")
     public String updateForm() {
-        // 인증 체크하기
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            return "redirect:/loginForm";
-        }
+//        // 인증 체크하기
+//        User sessionUser = (User) session.getAttribute("sessionUser");
+//        if (sessionUser == null) {
+//            return "redirect:/loginForm";
+//        }
         return "/user/updateForm";
     }
 
