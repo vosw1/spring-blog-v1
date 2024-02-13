@@ -26,6 +26,11 @@ public class UserController {
 //        this.session = session;
 //    }
 
+    @GetMapping("/loginForm") // view만 원함
+    public String loginForm() {
+        return "user/loginForm";
+    }
+
     // 원래는 get요청이나 예외 post요청하면 됨
     // 민감한 정보는 쿼리 스트링에 담아보낼 수 없음
     //원래는 get요청이나 예외 post요청하면 됨
@@ -48,6 +53,11 @@ public class UserController {
         }
     }
 
+    @GetMapping("/joinForm") // view만 원함
+    public String joinForm() {
+        return "user/joinForm";
+    }
+
     @PostMapping("/join")
     public String join(UserRequest.JoinDTO requestDTO) {
         System.out.println(requestDTO);
@@ -58,16 +68,6 @@ public class UserController {
         }
         userRepository.save(requestDTO); // 모델에 위임하기
         return "redirect:/loginForm"; //리다이렉션불러놓은게 있어서 다시부른거
-    }
-
-    @GetMapping("/joinForm") // view만 원함
-    public String joinForm() {
-        return "user/joinForm";
-    }
-
-    @GetMapping("/loginForm") // view만 원함
-    public String loginForm() {
-        return "user/loginForm";
     }
 
     @GetMapping("/user/updateForm")
