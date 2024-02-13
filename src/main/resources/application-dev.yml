@@ -5,6 +5,7 @@ server:
       force: true
     session:
       timeout: 30m
+<<<<<<< HEAD
   port: 8080
 
 spring:
@@ -34,3 +35,6 @@ spring:
     init:
       data-locations:
         - classpath:templates/db/data.sql # 리소스 폴더(로케이션 파일이 여러개 일 수 있음)를 가리킴
+=======
+  port: 8080
+>>>>>>> 59243b02e1ea5a19820170029e612b5ee2d0bd0f
