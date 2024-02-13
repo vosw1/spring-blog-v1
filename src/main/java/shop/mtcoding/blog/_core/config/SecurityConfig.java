@@ -11,7 +11,7 @@ import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 @Configuration// 메모리에 띄우기 위한 문법
 public class SecurityConfig {
 
-    @Bean
+    @Bean // 다른걸로 hash할 경우 변경해야 함
     public BCryptPasswordEncoder encoder(){
         return new BCryptPasswordEncoder();
     } // 패스워드 인코더 디폴트 설정
