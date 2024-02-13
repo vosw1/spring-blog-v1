@@ -18,12 +18,12 @@ public class SecurityConfig {
 
     // 인증과 상관없이 열어야 하는 주소
     // 주소 설계를 잘해야 함
-    @Bean
+    @Bean // IoC에 뜸
     public WebSecurityCustomizer ignore(){ // 정적 파일만 security filter에서 제외시키기
         return w -> w.ignoring().requestMatchers("/static/**", "/h2-console/**");
     }
 
-    @Bean
+    @Bean // IoC에 뜸
     SecurityFilterChain configure(HttpSecurity http) throws Exception {
 
         http.csrf(c->c.disable());
