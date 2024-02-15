@@ -1,5 +1,6 @@
 package shop.mtcoding.blog.reply;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,7 @@ public class ReplyController {
     private final ReplyRepository replyRepository;
 
     @PostMapping("/reply/save")
-    public String write(ReplyRequest.SaveDTO requestDTO){
+    public String write(ReplyRequest.SaveDTO requestDTO, HttpServletRequest request){
         System.out.println(requestDTO);
 
         User sessionUser = (User) session.getAttribute("sessionUser");
@@ -28,6 +29,7 @@ public class ReplyController {
 
         // 핵심 코드
         replyRepository.save(requestDTO, sessionUser.getId());
+        request.setAttribute("reply", requestDTO);
 
         return "redirect:/board/"+requestDTO.getBoardId();
     }
