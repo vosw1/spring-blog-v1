@@ -1,12 +1,17 @@
 {{> layout/header}}
 
-<h1>
-    {{#sessionUser}}
-        {{username}}
-    {{/sessionUser}}
-</h1>
-
 <div class="container p-5">
+    <div class="row justify-content-end">
+        <div class="col-md-4">
+            <form action="/" method="get" class="form-inline">
+                <div class="input-group rounded">
+                    <input class="form-control me-2 rounded-end" type="text" placeholder="Search..." name="keyword" />
+                    <button class="btn btn-primary rounded-start" type="submit">검색</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
     {{#boardList}}
         <div class="card mb-3">
@@ -17,10 +22,10 @@
         </div>
     {{/boardList}}
 
-    <ul class="pagination d-flex justify-content-center">
-        <li class="page-item {{#first}}disabled{{/first}}"><a class="page-link" href="?page={{prev}}">Previous</a></li>
-        <li class="page-item {{#last}}disabled{{/last}}"><a class="page-link" href="?page={{next}}">Next</a></li>
-    </ul>
+<ul class="pagination d-flex justify-content-center">
+    <li class="page-item {{#first}}disabled{{/first}}"><a class="page-link" href="?page={{prev}}&keyword={{keyword}}">Previous</a></li>
+    <li class="page-item {{#last}}disabled{{/last}}"><a class="page-link" href="?page={{next}}&keyword={{keyword}}">Next</a></li>
+</ul>
 
 </div>
 
