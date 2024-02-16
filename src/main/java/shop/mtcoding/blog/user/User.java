@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class User { // use_tb의 내용 DB에 담기
     @Id // PK
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
-    private int id;
+    private Integer id;
 
     @Column(unique=true) // 유니크 설정
     private String username;

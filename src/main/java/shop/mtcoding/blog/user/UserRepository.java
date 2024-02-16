@@ -4,6 +4,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import shop.mtcoding.blog.board.BoardResponse;
+
+import java.util.List;
 
 @Repository // IoC에 new하는 방법
 public class UserRepository {
