@@ -106,11 +106,27 @@ public class BoardController {
         return "redirect:/";
     }
 
-    // http://localhost:8080?page=0
-    @GetMapping({"/", "/board"})
-    public String index(HttpServletRequest request) {
-        List<Board> boardList = boardRepository.findAll();
+    // http://localhost:8080?page=0 쿼리스트링
+    // 스프링에서 쿼리 스트링 받는 방법은 매개 변수에 받기
+    @GetMapping({"/"})
+    public String index(HttpServletRequest request, @RequestParam(value = "page", defaultValue = "0") Integer page) {
+        List<Board> boardList = boardRepository.findAll(page);
+
+        // 전체 페이지 갯수
+        Integer count = boardRepository.count().intValue();
+        // 5 -> 2 page
+        // 6 -> 2 page
+        // 7 -> 3 page
+        // 8 -> 3 page
+        int rest= count % 3 == 0 ? 0 : 1;
+        int allPageCount = count/3 + rest;
+
         request.setAttribute("boardList", boardList);
+        request.setAttribute("first", page==0);
+        request.setAttribute("last", allPageCount == page+1); // 현재 페이지와 전체 페이지를 알아야 함
+        request.setAttribute("prev", page-1);
+        request.setAttribute("next", page+1);
+
         return "index";
     }
 

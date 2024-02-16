@@ -55,7 +55,9 @@ public class ReplyRepository {
     }
 
     public Reply findById(int id){
-        String q = "select * from reply_tb where id = ?";
+        String q = """
+                select * from reply_tb where id = ?
+                """;
         Query query = em.createNativeQuery(q, Reply.class);
         query.setParameter(1, id);
 

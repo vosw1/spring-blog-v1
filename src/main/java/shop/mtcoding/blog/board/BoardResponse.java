@@ -1,9 +1,20 @@
 package shop.mtcoding.blog.board;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Data;
 import shop.mtcoding.blog.user.User;
 
+import java.util.List;
+
 public class BoardResponse {
+
+    @Data
+    public static class ListDTO {
+        private boolean first;
+        private boolean last;
+        private Integer prev;
+        private Integer next;
+    }
 
     @Data // DB세상의 데이터 -> 릴레이션 매핑 : Java세상 데이터
     public static class DetailDTO {
