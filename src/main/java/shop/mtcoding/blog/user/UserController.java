@@ -5,9 +5,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import shop.mtcoding.blog._core.util.Script;
 
 @AllArgsConstructor
-@Controller
+@Controller // 파일을 리턴함 -> @ResponseBody로 메세지 자체를 리턴
 public class UserController {
 
     // fianl 변수는 반드시 초기화 되어야 함
@@ -43,15 +46,15 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String join(UserRequest.JoinDTO requestDTO) {
+    public @ResponseBody String join(UserRequest.JoinDTO requestDTO) {
         System.out.println(requestDTO);
 
-        // 1. 유효성 검사
-        if (requestDTO.getUsername().length() < 3) {
-            return "error/400";
+        try{
+            userRepository.save(requestDTO);
+        } catch (Exception e) {
+            return Script.back("아이디가 중복되었어요");
         }
-        userRepository.save(requestDTO); // 모델에 위임하기
-        return "redirect:/loginForm"; //리다이렉션불러놓은게 있어서 다시부른거
+        return Script.href("/loginForm"); // 메세지를 자바스크립트로 주면 302를 줄 필요 없음
     }
 
     @GetMapping("/joinForm") // view만 원함
