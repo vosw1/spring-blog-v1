@@ -2,6 +2,7 @@ package shop.mtcoding.blog.user;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,18 +33,26 @@ public class UserController {
 
         // 1. 유효성 검사
         if(requestDTO.getUsername().length() < 3) {
-            return "error/400";
+            throw new RuntimeException("username 길이가 너무 짧아요");
         }
 
         // 2. 모델 필요 select * from user_tb where username=? and password=?
-        User user = userRepository.findByUsernameAndPassword(requestDTO); // DB에 조회할때 필요하니까 데이터를 받음
-            session.setAttribute("sessionUser", user);
+        User user = userRepository.findByUsername(requestDTO.getUsername()); // DB에 조회할때 필요하니까 데이터를 받음
+        // password 검증
+        if(!BCrypt.checkpw(requestDTO.getPassword(), user.getPassword())){ // 순수한 password 넣기
+            throw new RuntimeException("패스워드가 틀렸습니다");
+        }
+        session.setAttribute("sessionUser", user);
             return "redirect:/";
     }
 
     @PostMapping("/join")
     public String join(UserRequest.JoinDTO requestDTO) {
         System.out.println(requestDTO);
+
+        String rawPassword = requestDTO.getPassword(); // DTO에서 가져오기
+        String encPassword = BCrypt.gensalt(); // 암호화해서 고정 salt 치기
+        requestDTO.setPassword(encPassword); // DTO에 담기
 
         try{
             userRepository.save(requestDTO);

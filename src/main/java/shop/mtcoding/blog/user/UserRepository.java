@@ -42,4 +42,16 @@ public class UserRepository {
             throw new RuntimeException("아이디 혹은 비밀번호를 찾을 수 없습니다");
         }
     }
+
+    public User findByUsername(String username) {
+        Query query = em.createNativeQuery("select * from user_tb where username=?", User.class); // 알아서 매핑해줌
+        query.setParameter(1, username);
+
+        try { // 내부적으로 터지면 터지는 위치를 찾아서 내가 잡으면 됨
+            User user = (User) query.getSingleResult();
+            return user;
+        } catch (Exception e) {
+            throw new RuntimeException("아이디를 찾을 수 없습니다");
+        }
+    }
 }
