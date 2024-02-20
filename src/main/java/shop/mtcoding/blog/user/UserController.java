@@ -37,24 +37,20 @@ public class UserController {
 
         // 2. 모델 필요 select * from user_tb where username=? and password=?
         User user = userRepository.findByUsernameAndPassword(requestDTO); // DB에 조회할때 필요하니까 데이터를 받음
-        if (user == null) {
-            return "error/401";
-        }else {
             session.setAttribute("sessionUser", user);
             return "redirect:/";
-        }
     }
 
     @PostMapping("/join")
-    public @ResponseBody String join(UserRequest.JoinDTO requestDTO) {
+    public String join(UserRequest.JoinDTO requestDTO) {
         System.out.println(requestDTO);
 
         try{
             userRepository.save(requestDTO);
         } catch (Exception e) {
-            return Script.back("아이디가 중복되었어요");
+            throw new RuntimeException("아이디가 중복되었어요"); // 위임시키면 로직의 변화없이 오류를 위임하고 끝남
         }
-        return Script.href("/loginForm"); // 메세지를 자바스크립트로 주면 302를 줄 필요 없음
+        return "redirect:/loginForm";
     }
 
     @GetMapping("/joinForm") // view만 원함

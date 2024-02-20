@@ -39,7 +39,7 @@ public class UserRepository {
             User user = (User) query.getSingleResult();
             return user;
         } catch (Exception e) {
-            return null;
+            throw new RuntimeException("아이디 혹은 비밀번호를 찾을 수 없습니다");
         }
     }
 }
