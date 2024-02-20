@@ -31,6 +31,10 @@ public class UserController {
     @PostMapping("/login")
     public String login(UserRequest.LoginDTO requestDTO) {
 
+        String rawPassword= requestDTO.getPassword();
+        String encPassword= BCrypt.hashpw(rawPassword, BCrypt.gensalt());//레인보우 테이블에 안털림
+        requestDTO.setPassword(encPassword);
+
         // 1. 유효성 검사
         if(requestDTO.getUsername().length() < 3) {
             throw new RuntimeException("username 길이가 너무 짧아요");
@@ -39,7 +43,7 @@ public class UserController {
         // 2. 모델 필요 select * from user_tb where username=? and password=?
         User user = userRepository.findByUsername(requestDTO.getUsername()); // DB에 조회할때 필요하니까 데이터를 받음
         // password 검증
-        if(!BCrypt.checkpw(requestDTO.getPassword(), user.getPassword())){ // 순수한 password 넣기
+        if(BCrypt.checkpw(requestDTO.getPassword(), user.getPassword())){ // 순수한 password 넣기
             throw new RuntimeException("패스워드가 틀렸습니다");
         }
         session.setAttribute("sessionUser", user);
@@ -50,9 +54,9 @@ public class UserController {
     public String join(UserRequest.JoinDTO requestDTO) {
         System.out.println(requestDTO);
 
-        String rawPassword = requestDTO.getPassword(); // DTO에서 가져오기
-        String encPassword = BCrypt.gensalt(); // 암호화해서 고정 salt 치기
-        requestDTO.setPassword(encPassword); // DTO에 담기
+        String rawPassword= requestDTO.getPassword();
+        String encPassword= BCrypt.hashpw(rawPassword, BCrypt.gensalt());//레인보우 테이블에 안털림
+        requestDTO.setPassword(encPassword);
 
         try{
             userRepository.save(requestDTO);
