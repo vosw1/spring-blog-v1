@@ -1,14 +1,13 @@
 package shop.mtcoding.blog.user;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import shop.mtcoding.blog._core.util.Script;
-import shop.mtcoding.blog.board.ApiUtil;
+import shop.mtcoding.blog._core.util.ApiUtil;
 
 @AllArgsConstructor
 @Controller // 파일을 리턴함 -> @ResponseBody로 메세지 자체를 리턴
@@ -18,13 +17,13 @@ public class UserController {
     private final UserRepository userRepository; // null
     private final HttpSession session;
 
-    @GetMapping("/username-same-check")
-    public @ResponseBody ApiUtil<?> usernameSameCheck(@RequestBody UserRequest.UserNameSameCheckDTO requestDTO) {
-        User user = userRepository.findByUsername(requestDTO.getUsername());
+    @GetMapping("/api/username-same-check")
+    public @ResponseBody ApiUtil<?> usernameSameCheck(String username){
+        User user = userRepository.findByUsername(username);
         if (user == null) {
             return new ApiUtil<>(true); // 가입 가능
         } else {
-            return new ApiUtil<>(false); //  가입 불가
+            return new ApiUtil<>(false); // 가입 불가
         }
     }
 
@@ -47,16 +46,28 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String join(UserRequest.JoinDTO requestDTO) {
-        System.out.println(requestDTO);
+    public String join(UserRequest.JoinDTO requestDTO, HttpServletRequest request) {
+        String username = requestDTO.getUsername(); // DTO에서 사용자명 추출
 
+        // 중복 체크
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            throw new RuntimeException("아이디가 중복되었어요");
+        }
+
+        // 중복이 아니면 회원가입 처리
         try {
             userRepository.save(requestDTO);
         } catch (Exception e) {
-            throw new RuntimeException("아이디가 중복되었어요"); // 위임시키면 로직의 변화없이 오류를 위임하고 끝남
+            throw new RuntimeException("회원가입에 실패하였습니다.");
         }
+
+        // 회원가입 성공 후 다시 회원가입 폼으로 이동할 때 사용자 이름 전달
+        request.setAttribute("username", username);
+
         return "redirect:/loginForm";
     }
+
 
     @GetMapping("/joinForm") // view만 원함
     public String joinForm() {
