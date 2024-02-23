@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import shop.mtcoding.blog._core.util.Script;
+import shop.mtcoding.blog.board.ApiUtil;
 
 @AllArgsConstructor
 @Controller // 파일을 리턴함 -> @ResponseBody로 메세지 자체를 리턴
@@ -17,11 +18,15 @@ public class UserController {
     private final UserRepository userRepository; // null
     private final HttpSession session;
 
-    // @AllArgsConstructor를 사용하면서 필요 없어짐
-//    public UserController(UserRepository userRepository, HttpSession session) {
-//        this.userRepository = userRepository;
-//        this.session = session;
-//    }
+    @GetMapping("/username-same-check")
+    public @ResponseBody ApiUtil<?> usernameSameCheck(@RequestBody UserRequest.UserNameSameCheckDTO requestDTO) {
+        User user = userRepository.findByUsername(requestDTO.getUsername());
+        if (user == null) {
+            return new ApiUtil<>(true); // 가입 가능
+        } else {
+            return new ApiUtil<>(false); //  가입 불가
+        }
+    }
 
     // 원래는 get요청이나 예외 post요청하면 됨
     // 민감한 정보는 쿼리 스트링에 담아보낼 수 없음
@@ -31,21 +36,21 @@ public class UserController {
     public String login(UserRequest.LoginDTO requestDTO) {
 
         // 1. 유효성 검사
-        if(requestDTO.getUsername().length() < 3) {
+        if (requestDTO.getUsername().length() < 3) {
             return "error/400";
         }
 
         // 2. 모델 필요 select * from user_tb where username=? and password=?
         User user = userRepository.findByUsernameAndPassword(requestDTO); // DB에 조회할때 필요하니까 데이터를 받음
-            session.setAttribute("sessionUser", user);
-            return "redirect:/";
+        session.setAttribute("sessionUser", user);
+        return "redirect:/";
     }
 
     @PostMapping("/join")
     public String join(UserRequest.JoinDTO requestDTO) {
         System.out.println(requestDTO);
 
-        try{
+        try {
             userRepository.save(requestDTO);
         } catch (Exception e) {
             throw new RuntimeException("아이디가 중복되었어요"); // 위임시키면 로직의 변화없이 오류를 위임하고 끝남

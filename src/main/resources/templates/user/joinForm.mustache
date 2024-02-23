@@ -10,22 +10,7 @@
         <div class="card-body">
             <form action="/join" method="post" enctype="application/x-www-form-urlencoded">
                 <div class="mb-3">
-                    <input id="username" type="text" class="form-control" placeholder="Enter username" name="username"
-                           value="ssar" onkeyup="check()">
-                    <div class="text-danger">아이디가 중복되지 않습니다.</div>
-                    <script>
-                        let isSameCheck = false;
-
-                        function check() {
-                            let username = $("#username").val();
-                            console.log(username);
-                            $.ajax({}).done((res) => {
-
-                            }).fail((res) => {
-
-                            });
-                        }
-                    </script>
+                    <input id="username" type="text" class="form-control" placeholder="Enter username" name="username">
                 </div>
                 <div class="mb-3">
                     <input type="password" class="form-control" placeholder="Enter password" name="password">
