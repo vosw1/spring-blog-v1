@@ -10,40 +10,57 @@
         <div class="card-body">
             <form action="/join" method="post">
                 <div class="mb-3">
-                <div class="mb-3">
-                    <input id="username" type="text" onchange="usernameSameCheck()" class="form-control" placeholder="Enter username" name="username">
-                </div>
-                <div class="mb-3">
-                    <input type="password" class="form-control" placeholder="Enter password" id="password">
-                </div>
-                <div class="mb-3">
-                    <input type="email" class="form-control" placeholder="Enter email" id="email"
-                           value="ssar@nate.com">
-                </div>
-                <button type="submit" class="btn btn-primary form-control">회원가입</button>
+                    <div class="mb-3">
+                        <input id="username" type="text" onchange="usernameSameCheck()" class="form-control" placeholder="Enter username" name="username">
+                        <span class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" class="form-control" placeholder="Enter password" id="password">
+                    </div>
+                    <div class="mb-3">
+                        <input type="email" class="form-control" placeholder="Enter email" id="email"
+                               value="ssar@nate.com">
+                    </div>
+                    <button type="submit" class="btn btn-primary form-control">회원가입</button>
             </form>
         </div>
 
         <script>
             let isSameCheck = false;
 
-            function usernameSameCheck(){
-                let username = $("#username").val();
-                $.ajax({
-                    url: "/api/username-same-check?username="+username,
-                    type: "get"
-                }).done((res)=>{
-                    if(res.body == true){
-                        isSameCheck = true;
-                        alert("회원가입이 가능합니다");
-                    }else{
-                        isSameCheck = false;
-                        alert("동일한 아이디가 존재합니다");
+            $(document).ready(function() {
+                $("#username").on("input", function() {
+                    let username = $(this).val().trim();
+
+                    // 아이디 입력란이 비어 있는 경우
+                    if (username.trim() === "") {
+                        alert("아이디를 입력해야 합니다.");
+                        if (password.trim() === "") {
+                            alert("패스워드를 입력해야 합니다.");
+                            if (email.tiim() === "") {
+                                alert("이메일을 입력해야 합니다.")
+                            }
+                        }
+                        return; // 공백으로 중복 체크하는것 막기
                     }
-                }).fail((res)=>{
-                    alert(res.responseJSON.msg);
+
+                    // 아이디 중복 체크
+                    $.ajax({
+                        url: "/api/username-same-check?username=" + username,
+                        type: "GET"
+                    }).done((res) => {
+                        if (res.body == null) {
+                            $(".text-danger").addClass("disabled").text("사용하실 아이디를 입력해주세요");
+                        } else if(res.body == true) {
+                            $(".text-danger").addClass("disabled").text("아이디가 사용 가능합니다");
+                        } else {
+                            $(".text-danger").addClass("disabled").text("아이디가 중복되었습니다");
+                        }
+                    }).fail((res) => {
+                        alert(res.responseJSON.msg);
+                    });
                 });
-            }
+            });
         </script>
 
     </div>
