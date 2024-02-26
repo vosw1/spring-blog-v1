@@ -26,13 +26,13 @@
 
     <!-- 좋아요 / 따로 조회해서 들고오기-->
     <div>
-        {{#isLove}}
-            <i class="fas fa-heart my-cursor text-danger"></i> <span>{{loveCount}}</span>
-        {{/isLove}}
+        {{#love.isLove}}
+            <i class="fas fa-heart my-cursor text-danger"></i> <span>{{love.loveCount}}</span>
+        {{/love.isLove}}
 
-        {{^isLove}}
-        <i class="far fa-heart my-cursor"></i> <span>{{loveCount}}</span>
-        {{/isLove}}
+        {{^love.isLove}}
+        <i class="far fa-heart my-cursor"></i> <span>{{love.loveCount}}</span>
+        {{/love.isLove}}
     </div>
 
     <!-- 댓글 -->

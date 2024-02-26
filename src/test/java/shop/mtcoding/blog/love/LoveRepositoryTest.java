@@ -13,7 +13,7 @@ public class LoveRepositoryTest {
     private LoveRepository loveRepository;
 
     @Test
-    public void findLove_test() {
+    public void findLove_test(){
         // given
         int boardId = 9;
         int sessionUserId = 1;
