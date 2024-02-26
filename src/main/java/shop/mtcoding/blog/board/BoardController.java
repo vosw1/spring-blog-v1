@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import shop.mtcoding.blog.love.LoveRepository;
+import shop.mtcoding.blog.love.LoveResponse;
 import shop.mtcoding.blog.reply.ReplyRepository;
 import shop.mtcoding.blog.user.User;
 
@@ -17,6 +19,7 @@ public class BoardController {
     private final HttpSession session; // DI
     private final BoardRepository boardRepository; // DI
     private final ReplyRepository replyRepository;
+    private final LoveRepository loveRepository;
 
     // ?title=제목1&content=내용1
     // title=제목1&content=내용1
@@ -160,17 +163,21 @@ public class BoardController {
     }
 
     // 상세보기시 호출
-    @GetMapping("/board/{id}") // 1이 프라이머리키 -> 뭐든 넣어도 실행시키려면 변수화시켜서 {}
+    @GetMapping("/board/{id}")
     public String detail(@PathVariable int id, HttpServletRequest request) {
-        User sessionUser = (User) session.getAttribute("sessionUser"); // 페이지 권한
-
-        BoardResponse.DetailDTO boardDTO = boardRepository.findByIdWithUser(id); //메서드 이름 변경
-        boardDTO.isBoardOwner(sessionUser); // null이면 터짐
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        BoardResponse.DetailDTO boardDTO = boardRepository.findByIdWithUser(id);
+        boardDTO.isBoardOwner(sessionUser);
 
         List<BoardResponse.ReplyDTO> replyDTOList = replyRepository.findByBoardId(id, sessionUser);
-
         request.setAttribute("board", boardDTO);
         request.setAttribute("replyList", replyDTOList);
+
+        LoveResponse.DetailDTO loveDetailDTO = loveRepository.findLove(id, sessionUser.getId());
+        request.setAttribute("love", loveDetailDTO);
+        // fas fa-heart text-danger
+        // far fa-heart
+        // request.setAttribute("css", "far fa-heart");
 
         return "board/detail";
     }

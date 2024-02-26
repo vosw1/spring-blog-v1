@@ -13,6 +13,10 @@ import java.util.List;
 public class BoardRepository {
     private final EntityManager em;
 
+    public void findLove(int boardId, int sessionUserId){
+
+    }
+
     public Long count() {
         Query query = em.createNativeQuery("select count(8) from board_tb");
         return (Long) query.getSingleResult();
