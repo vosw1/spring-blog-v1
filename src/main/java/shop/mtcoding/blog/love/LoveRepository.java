@@ -4,11 +4,29 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import shop.mtcoding.blog.board.Board;
 
 @RequiredArgsConstructor
 @Repository
 public class LoveRepository {
     private final EntityManager em;
+
+    public Love findById(int id) {
+        Query query = em.createNativeQuery("select * from love_tb where id = ?", Love.class);
+        query.setParameter(1, id);
+
+        Love love = (Love) query.getSingleResult();
+        return love;
+    }
+
+    @Transactional
+    public void deleteById(int id) {
+        Query query = em.createNativeQuery("delete from love_tb where id = ?");
+        query.setParameter(1, id);
+
+        query.executeUpdate();
+    }
 
     public LoveResponse.DetailDTO findLove(int boardId) { // 카운트만 받기
         String q = """
