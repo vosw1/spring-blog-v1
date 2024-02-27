@@ -5,7 +5,6 @@ import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import shop.mtcoding.blog.board.Board;
 
 @RequiredArgsConstructor
 @Repository
@@ -28,7 +27,8 @@ public class LoveRepository {
         query.executeUpdate();
     }
 
-    public LoveResponse.DetailDTO findLove(int boardId) { // 카운트만 받기
+
+    public LoveResponse.DetailDTO findLove(int boardId) {
         String q = """
                 SELECT count(*) loveCount
                 FROM love_tb
@@ -73,18 +73,18 @@ public class LoveRepository {
 
         Integer id = null;
         Boolean isLove = null;
-        Long loveCount = null; // long은 null을 사용할 수 없음, Long은 1L로 받아야 함
-
-        try { // 정상적으로 받기
+        Long loveCount = null;
+        try {
             Object[] row = (Object[]) query.getSingleResult();
             id = (Integer) row[0];
             isLove = (Boolean) row[1];
             loveCount = (Long) row[2];
-        } catch (Exception e) { // 댓글이 없어서 터지면 0으로 초기화
+        } catch (Exception e) {
             id = 0;
             isLove = false;
             loveCount = 0L;
         }
+
 
         System.out.println("id : " + id);
         System.out.println("isLove : " + isLove);
@@ -94,5 +94,18 @@ public class LoveRepository {
                 id, isLove, loveCount
         );
         return responseDTO;
+    }
+
+//    @Transactional // insert된 row 자체를 리턴해줌->insert 시점에서는 알 수 없음 /pk를 알 기 위해서임
+    public Love save(LoveRequest.SaveDTO requestDTO, int sessionUserId) {
+        Query query = em.createNativeQuery("insert into love_tb(board_id, user_id, created_at) values(?,?, now())");
+        query.setParameter(1, requestDTO.getBoardId());
+        query.setParameter(2, sessionUserId);
+
+        query.executeUpdate();
+        // 같은 트랜잭션 안에 들어가야함
+        Query q = em.createNativeQuery("select select * from love_tb where id=(max(id) from love_tb))", Love.class); // max값 조회해서 삽입한 현재값으로 id를 받아와야 삭제도 가능함
+        Love love = (Love) q.getSingleResult();
+        return love;
     }
 }
