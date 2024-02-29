@@ -37,6 +37,10 @@ public class PicController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        System.out.println(requestDTO);
+
+
         return "redirect:/";
     }
 

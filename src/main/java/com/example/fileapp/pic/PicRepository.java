@@ -16,8 +16,10 @@ public class PicRepository {
         Query query = em.createNativeQuery("insert into pic_tb(title, img_filename) values(?,?)");
         query.setParameter(1, title);
         query.setParameter(2, imgFilename);
-
+        System.out.println(title);
+        System.out.println(imgFilename);
         query.executeUpdate();
+
     }
 
     public Pic findById(int id){
